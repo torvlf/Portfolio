@@ -2,22 +2,28 @@
 #include <windows.h>
 #define COUNT 10
 int input_count(void);
-void input_score(int* count, char(*np)[12], int(*socre)[4], double* ap);
+void input_score(int* count, char(*np)[12], int* kp, int* ep, int* mp, int* tp, double* ap);
 void calc_grade(int count, double* avg, char* grade);
-void print_score(int count, char(*name)[12], int(*score)[4], double* avg, char* grade);
+void print_score(int count, char(*name)[12], int* kor, int* eng, int* mat, int* tot, double* avg, char* grade);
 
 int main()
 {
-	int score[COUNT][4] = { 0 };
+	int kor[COUNT];
+	int eng[COUNT];
+	int mat[COUNT];
+	int tot[COUNT];
 	double avg[COUNT];
-	char name[COUNT][12];  // [10][12]´Â 12°³ÀÇ ¹®ÀÚ¸¦ COUNT  °¹¼ö¸¸Å­ ¸¸µé°Ú´Ù´Â ÀÇ¹Ì
+	char name[COUNT][12];  // [10][12]ëŠ” 12ê°œì˜ ë¬¸ìë¥¼ COUNT  ê°¯ìˆ˜ë§Œí¼ ë§Œë“¤ê² ë‹¤ëŠ” ì˜ë¯¸
 	int count;
 	char grade[10];
 
 	count = input_count();
-	input_score(&count, name, score, avg);
+//	count = input_score(count, name, kor,eng, mat, tot, avg);
+	input_score(&count, name, kor, eng, mat, tot, avg);
 	calc_grade(count, avg, grade);
-	print_score(count, name, score, avg, grade);
+	print_score(count, name, kor, eng, mat, tot, avg, grade);
+
+	
 
 	return 0;
 }
@@ -28,37 +34,33 @@ int input_count(void)
 
 	do
 	{
-		printf("Ã³¸®ÇÒ ÇĞ»ı¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä(ÃÖ´ë ÇĞ»ı¼ö(%d)) : ", COUNT);
+		printf("ì²˜ë¦¬í•  í•™ìƒìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”(ìµœëŒ€ í•™ìƒìˆ˜(%d)) : ", COUNT);
 		scanf("%d", &count);
 		if ((count <= 0) || (COUNT < count))
 		{
-			printf("ÀÔ·Â¹üÀ§¸¦ ¹ş¾î³µ½À´Ï´Ù. ´Ù½ÃÀÔ·ÂÇÏ½Ã¿À.\n");
+			printf("ì…ë ¥ë²”ìœ„ë¥¼ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œì…ë ¥í•˜ì‹œì˜¤.\n");
 		}
 		else
 			break;
 
-	} while (1);
-
+	} while(1);
+	
 	return count;
 }
 
-void input_score(int* count, char(*np)[12], int(*score)[4], double* ap)
+void input_score(int* count, char (*np)[12],int* kp, int* ep, int* mp, int* tp, double* ap)
 {
-	int i, j;
-	printf("ÀÌ¸§, ±¹¾î, ¿µ¾î, ¼öÇĞ Á¡¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä!\n");
+	int i;
+	printf("ì´ë¦„, êµ­ì–´, ì˜ì–´, ìˆ˜í•™ ì ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”!\n");
 	for (i = 0; i < *count; i++)
 	{
 		scanf("%s", np[i]);
 		if (strcmp(np[i], "quit") == 0)
 			break;
-		
-		for (j = 0; j < 3; j++)
-		{
-			scanf("%d", &score[i][j]);  // scanf("%d", (*(*score +i)+j);
-			score[i][3] += score[i][j];  // ÃÑÁ¡À» ³Ö´Â°Í
-		}
-
-		ap[i] = (double)score[i][3] / 3.0;
+///		scanf("%d%d%d", &kp[i], &ep[i],  &mp[i]);
+		scanf("%d%d%d", kp + i, ep + i, mp + i);
+		tp[i] = kp[i] + ep[i] + mp[i];
+		ap[i] = (double)tp[i] / 3.0;
 	}
 	*count = i;
 
@@ -94,22 +96,17 @@ void calc_grade(int count, double* avg, char* grade)
 	return;
 }
 
-void print_score(int count, char(*name)[12], int(*score)[4], double* avg, char* grade)
+void print_score(int count, char(*name)[12], int* kor, int* eng, int* mat, int* tot, double* avg, char* grade)
 {
-	int i, j;
+	int i;
 
 	system("cls");
 	printf("--------------------------------------------------------\n");
-	printf(":%-13s:%6s:%6s:%6s:%6s:%6s:%6s\n", " ÀÌ¸§ ", " ±¹¾î ", " ¿µ¾î ", " ¼öÇĞ ", " ÃÑÁ¡ ", " Æò±Õ ", " ÇĞÁ¡ ");
+	printf(":%-13s:%6s:%6s:%6s:%6s:%6s:%6s\n", " ì´ë¦„ ", " êµ­ì–´ ", " ì˜ì–´ ", " ìˆ˜í•™ ", " ì´ì  ", " í‰ê·  ", " í•™ì  ");
 	printf("--------------------------------------------------------\n");
 	for (i = 0; i < count; i++)
 	{
-		printf(": %-12s", name[i]);
-		for (j = 0; j < 4; j++);
-		{
-			printf("%5d", score[i][j]);
-		}
-		printf(":%5.1lf :%5c \n", avg[i], grade[i]);
+		printf(": %-12s:%5d :%5d :%5d :%5d :%5.1lf :%5c \n", name[i], kor[i], eng[i], mat[i], tot[i], avg[i], grade[i]);
 	}
 	printf("--------------------------------------------------------\n");
 
