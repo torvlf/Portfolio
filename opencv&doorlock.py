@@ -38,8 +38,8 @@ id = 0
 
 # 실시간 비디오 캡처 초기화 및 시작
 cap = cv2.VideoCapture(-1)
-cap.set(3, 640) # set video widht
-cap.set(4, 480) # set video height
+cap.set(3, 640) # 비디오 너비 설정
+cap.set(4, 480) # 비디오 높이 설정
 
 # 얼굴로 인식 할 최소 창 크기 정의
 minW = 0.1*cap.get(3)
@@ -68,7 +68,8 @@ while True:
 
 		cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2)
 		cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  
-
+	
+	# 카메라 뷰 및 id가 collect면 자동 종료
 	cv2.imshow('camera',img) 
 	cv2.waitKey(1) & 0xff 
 	if (id == "Collect"):
